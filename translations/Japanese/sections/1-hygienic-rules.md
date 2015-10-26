@@ -1,239 +1,213 @@
-## 1. Hygienic Rules
+## 1. 衛生的なルール
 
 <img src="https://raw.githubusercontent.com/monifu/scala-best-practices/master/assets/scala-logo-256.png"  align="right" width="128" height="128" />
 
-These are general purpose hygienic rules that transcend the language
-or platform rules. Programming language is a form of communication,
-targeting computer systems, but also your colleagues and your future
-self, so respecting these rules is just like washing your hands after
-going to the bathroom.
+この章は、言語や開発環境を超えた汎用な衛生的規則についてです。
+プログラミング言語はコンピュータシステムとコミュニケーションを取るための一つの形式ですが、
+それだけではなくあなたの同僚や将来のあなた自身とのコミュニケーション手段でもあります。
+なのでこれらの規則を重んじることは、当然のことといえます。
 
-### 1.1. SHOULD enforce a reasonable line length
+### 1.1 1行の長さは適切に"すべき"
 
-There's a whole science on typography which says that people lose
-their focus when the line of text is too wide, a long line makes it
-difficult to gauge where the line starts or ends and it makes it
-difficult to continue on the next line below it, as your eyes have to
-move a lot from the right to the left. It also makes it difficult to
-scan for important details.
+活版印刷技術の世界全般に、人は文字列が横に広がると集中力を失うと言われています。
+長すぎる文章は分の始まりと終わりの判断や次の行に読み進めていくことを難しくます。
+何度も右から左へ目を動かさなければならない。
+このことは、重要な部分を読み解くことも困難にします。
 
-In typography, the optimal line length is considered to be somewhere
-between 50 and 70 chars.
+活版印刷においては、適切な一行の長さは50文字から70文字程度だと考えられています。
 
-In programming, we've got indentation, so it's not feasible to impose
-a 60 chars length for lines. 80 chars is usually acceptable, but not
-in Scala, because in Scala we use a lot of closures and if you want
-long and descriptive names for functions and classes, well, 80 chars
-is way too short.
+プログラミングにおいては、インデントを用いるので、1行を60文字に制限するというのは実用的ではありません
+普通は80文字なら受け入れられますが、Scalaではそうではありません。
+なぜなら、Scalaではよくclosureが用いられ、関数やクラスに長く説明的な名前をつけようとすると80文字では短すぎます。
 
-120 chars, as IntelliJ IDEA is configured by default, may be too wide
-on the other hand.  Yes, I know that we've got 16:9 wide monitors, but
-this doesn't help readability and with shorter lines we can put these
-wide monitors to good use when doing side-by-side diffs. And with long
-lines it takes effort to notice important details that happen at the
-end of those lines.
+一方で、IntelliJ IDEAが標準で設定されているような、1行120文字というのは長すぎるでしょう。
+16：9の大きな画面を使っていても、読みやすくなるわけではありません。
+より短い文をこれらの広い画面に映し出すことで、間違えてしまった時に役に立ちます。
+また、長い文章は終わりの方にある重要な部分に気がつくための努力を必要とします。
 
-So as a balance:
+したがって、バランスとしては
 
-- strive for 80 chars as the soft limit and if it gets ugly,
-- then 100 chars is enough, except for ...
-- function signatures, which can get really ugly if limited
+* まずは80文字を簡単な（soft）制限として心がけましょう
+* もし、それで足りなければ100文字なら十分です
+* ただし、関数を定義するときは除きます。もし制限すると、とても不格好になるでしょう
 
-On the other hand, anything that goes beyond 120 chars is an abomination.
+一方で、120文字を超えるようなものは嫌悪の対象になります。
 
-### 1.2. MUST NOT rely on a SBT or IDE plugin to do the formatting for you
+### 1.2 フォーマットをするためにSBTやIDEのプラグインに頼っては"いけない"
 
-IDEs and SBT plugins can be of great help, however if you're thinking
-about using one to automatically format your code, beware.
+IDEやSBTのプラグインはとても役立つものですが、もし自動であなたの書いたコードをフォーマット
+する機能を使おうと思っているなら、気をつけてください。
 
-You won’t find a plugin that is able to infer the developer’s intent,
-since that requires a human-like understanding of the code and would be 
-near impossible to make. The purpose of proper indentation and formatting 
-isn't to follow some rigid rules set upon you in a cargo-cult way, but to
-make the code more logical, more readable, more
-approachable. Indentation is actually an art form, which is not awful
-since all you need is a nose for awful code and the urge of fixing
-it. And it is in the developer's job description to make sure that his
-code doesn't stink.
+あなたが開発者の意図を推測できるプラグインを見つけられないでしょう、なぜならそのためには人間に近いコードに対する理解が要求され、
+それを作ることは不可能に近いからです。規約にそってインデントしたりショーマットする目的は,
+おまじないとして設定された厳格なルールに従うためではなく、コードをより論理的で読みやすく、わかりやすくするためです。
+実際はインデントは美術的な書式で、それは恐ろしいものではありません、なぜならあなたにはひどいコードにたいする鼻とそれを修正する衝動さえあれば良いからです。
+それに、他の人のコードがひどいものでないか確かめることは、
+開発者の仕事と言えるからです。
 
-So automated means are fine, BUT BE CAREFUL to not ruin other people's
-carefully formatted code, otherwise I'll slap you in prose.
+したがって、自動化された手段はよいことですが、他の人が注意を払ってフォーマットしたコードを台無しにしてしまわないように"注意してください"、
+さもないと、その文のせいで叩かれるかもしれません。
 
-Lets think about what I said - if the line is too long, how is a
-plugin supposed to break it? Lets talk about this line (real code):
+私が述べたことについて考えてみましょう。もし一行が長かった場合、プラグインはどのようにしてそれを改行しようとするでしょうか？
+この行について見てみましょう。（これは実際のコードです）:
 
 ```scala
-    val dp = new DispatchPlan(new Set(filteredAssets), start = startDate, end = endDate, product, scheduleMap, availabilityMap, Set(activationIntervals.get), contractRepository, priceRepository)
+val dp = new DispatchPlan(new Set(filteredAssets), start = startDate, end = endDate, product, scheduleMap, availabilityMap, Set(activationIntervals.get), contractRepository, priceRepository)
 ```
 
-In most cases, a plugin will just do truncation and I've seen a lot of these in practice:
+ほとんどの場合、プラグインはただ短くするだけです。実際わたしはこれまでこのようなコードをたくさん見たことがあります。
 
 ```scala
-    val dp = new DispatchPlan(Set(filteredAssets), start =
-      startDate, end = endDate, product, scheduleMap, availabilityMap,
-      Set(activationIntervals), contractRepository, priceRepository)
+val dp = new DispatchPlan(Set(filteredAssets), start =
+  startDate, end = endDate, product, scheduleMap, availabilityMap,
+  Set(activationIntervals), contractRepository, priceRepository)
 ```
 
-Now that's not readable, is it? I mean, seriously, that looks like
-barf. And that's exactly the kind of output I see coming from people
-relying on plugins to work. We could also have this version:
+これは読みやすくはないですよね。つまり、率直に言って、吐き気がしてくるようです。
+それはまさしく、私が目にしたフォーマット作業をプラグインに頼っている人が持ってきた成果と同じ種類のものです。
+また、このようにすることもできます:
 
 ```scala
-    val dp = new DispatchPlan(
-      Set(filteredAssets),
-      startDate,
-      endDate,
-      product,
-      scheduleMap,
-      availabilityMap,
-      Set(activationIntervals),
-      contractRepository,
-      priceRepository
+val dp = new DispatchPlan(
+  Set(filteredAssets),
+  startDate,
+  endDate,
+  product,
+  scheduleMap,
+  availabilityMap,
+  Set(activationIntervals),
+  contractRepository,
+  priceRepository
+)
+```
+
+こちらのほうがよっぽど良さそうです。
+しかし、実際には、別のケースになるとあまり良くありません。
+次のような改行したいと思う行があったとしましょう:
+
+```scala
+val result = service.something(param1, param2, param3, param4).map(transform)
+```
+
+今回は関数のパラメータが関数と同じ行にあり、よくありません。
+あなたがどう対処しても変わりありません。
+
+```scala
+// transformの呼び出しが見難いので良くない
+  val result = service.something(
+ param1,
+ param2,
+ param3,
+ param4).map(transform)
+
+// 論理的な流れを分断しているので良くない
+val result = service.something(
+  param1,
+  param2,
+  param3,
+  param4
+  ).map(transform)
+```
+
+こちらのほうが良さそうです。
+
+```scala
+val result = service
+  .something(param1, param2, param3, param4)
+  .map(transform)
+```
+
+このほうがよいのではないでしょうか。もちろん、時には関数の呼び出しを省略しないことで
+とても長くなることはあります。
+なので、一時変数に頼る必要もあるでしょう。例えば...
+
+```scala
+val result = {
+  val instance =
+    object.something(
+      myAwesomeParam1,
+      otherParam2,
+      someSeriousParam3,
+      anEvenMoreSoParam4,
+      lonelyParam5,
+      catchSomeFn6,
+      startDate7
     )
+
+  for (x <- instance) yield
+    transform(x)
+}
 ```
 
-Looks much better. But truth is, this isn't so good in other
-instances. Like say we've got a line that we want to break:
+当然ですが、コードからひどい悪臭のする場合には、リファクタリングをするよう必要があるでしょう -
+おそらく、一つの関数のために幾つもの変数が存在している場合です。
 
-```scala
-   val result = service.something(param1, param2, param3, param4).map(transform)
-```
+行の長さについて厳密に述べてきました - 一度別の問題に陥ると、事態はより複雑なものになります。
+そして本当に、これを解析しあなたのために正しい決断を下すことのできるプラグインは見つからないでしょう。
 
-Now placing those parameters on their own line is awful, no matter how you deal with it:
+### 1.3 長い関数は分割"すべき"
 
-```scala
-    // awful because that transform call is not visible
-    val result = service.something(
-      param1,
-      param2,
-      param3,
-      param4).map(transform)
+理想としては、関数はたった2、3行の長さであるべきです。
+行があまり大きくなってきたら、それらを細かい関数に分割し、それらに名前をつけます。
 
-    // awful because it breaks the logical flow
-    val result = service.something(
-      param1,
-      param2,
-      param3,
-      param4
-    ).map(transform)
-```
+Scalaでは、それらの中間生成物を他のスコープでも使えるようにしなければいけない必要はなく、ここでの目的は
+読みやすさを手助けするのが主な目的で、Scalaではロジックを細かくするために内部関数ができることに気をつけてください。
 
-This would be much better:
+### 1.4 名前やコメントにスペルの間違いを持ち込んでは"いけない"
 
-```scala
-    val result = service
-      .something(param1, param2, param3, param4)
-      .map(transform)
-```
+間違ったスペルは不意に人をいらだたせ、読んでいる人の流れを遮ります。
+スペルチェック機能を使いましょう。
+賢いIDEは組み込みのスペルチェック機能を持っています。下線の引かれたスペルの警告に注意し、修正しましょう。
 
-Now that's better, isn't it? Of course, sometimes that call is so long
-that this doesn't cut it. So you need to resort to a temporary value
-of some sort, e.g...
+### 1.5 名前は意味が無いと"いけない"
 
-```scala
-    val result = {
-      val instance =
-        object.something(
-          myAwesomeParam1,
-          otherParam2,
-          someSeriousParam3,
-          anEvenMoreSoParam4,
-          lonelyParam5,
-          catchSomeFn6,
-          startDate7
-        )
+"_コンピューターサイエンスの世界には難しいことは2つしかない: キャッシュを無効化することと物事に名前をつけることだ。_" -- Phil Karlton
 
-      for (x <- instance) yield
-        transform(x)
-    }
-```
+ここに3つのガイドラインがあります。
 
-Of course, sometimes if the code stinks so badly, you need to get into
-refactoring - as in, maybe too many parameters are too much for a
-function ;-)
+1. 説明的な名前をつけましょう、しかしやり過ぎはいけません、4単語はすでにちょっと長すぎます
+2. 近くの文脈から型や目的が簡単に類推できる場合、またはすでに慣習化された習慣がある場合は、簡潔に名前付けできます
+3. もし説明的な名前をつけるルートを行くときは、意味のない最低な単語早めましょう。
 
-And we are talking strictly about line lengths - once we get into
-other issues, things get even more complicated. So really, you won't
-find a plugin that does this analysis and that can make the right
-decision for you.
-
-### 1.3. SHOULD break long functions
-
-Ideally functions should only be a couple of lines long. If the lines
-get too big, then we need to break them into smaller functions and
-give them a name.
-
-Note that in Scala we don't necessarily have to make such intermediate
-functions available in other scopes, the purpose here is to primarily
-aid readability, so in Scala we can do inner-functions to break logic
-into pieces.
-
-### 1.4. MUST NOT introduce spelling errors in names and comments
-
-Spelling errors are freakishly annoying, interrupting a reader's flow.
-Use a spell-checker. Intelligent IDEs have built-in
-spell-checkers. Note the underlined spelling warnings and fix them.
-
-### 1.5. Names MUST be meaningful
-
-*"There are only two hard things in Computer Science: cache
-invalidation and naming things."* -- Phil Karlton
-
-We've got three guidelines here:
-
-1. give descriptive names, but don't go overboard, four words is a
-   little too much already
-2. you can be terse in naming if the type / purpose can be easily
-   inferred from the immediate context, or if there's already an
-   established convention
-3. if going the descriptive route, don't do bullshit words that are
-   meaningless
-
-For example this is acceptable:
+例えば、この例は許容されます:
 
 ```scala
 for (p <- people) yield
   transformed(p)
 ```
 
-We can see that `p` is a person from the immediate context, so a short
-one letter name is OK. This is also acceptable because `i` is an
-established convention to use as an index:
+`p`がpersonであることは近くの文脈からわかるので、短い1文字の名前でも問題ありません。
+こちらも、`i`がインデックスと使われることが慣習になっているので容認されます。
 
 ```scala
 for (i <- 0 until limit) yield ???
 ```
 
-This is in general not acceptable, because usually with tuples the
-naming of the collection doesn't reflect well what's contained (if you
-haven't given those elements a name, then as a consequence the
-collection itself is going to have a bad name):
+今度は一般的には受け入れられません、なぜならタプルを使ったコレクションの名前付けは、
+何を持っているかということを十分に反映していないからです。（それらの要素に名前を与えなかったとしたら、
+結果としてコレクション自身が悪い名前を持つことになるでしょう。）
 
-```
+``` scala
 someCollection.map(_._2)
 ```
 
-Implicit parameters on the other hand are OK with short names, because
-being passed implicitly, we don't care about them unless they are
-missing:
+一方で、黙示的なパラメータは短い名前でも大丈夫です。それは、疑うこともなく渡され、
+それらが行方不明にならないかぎり気にすることはないからです。
 
 ```scala
 def query(id: Long)(implicit ec: ExecutionContext, c: WSClient): Future[Response]
 ```
 
-This is not acceptable because the name is utterly meaningless, even
-if there's a clear attempt at being descriptive:
+次の例は、たとえ説明的な名前にしようと明らかに試みていたとしても、名前が全く意味をなしていないので受け入れられません。
 
 ```scala
 def processItems(people: Seq[Person]) = ???
 ```
 
-It's not acceptable because the naming of this function indicates a
-side-effect (`process` is a verb indicating a command), yet it doesn't
-describe what we are doing with those `people`. The `Items` suffix is
-meaningless, because we might have said `processThingy`,
-`processRows`, `processStuff` and it would still say exactly the same
-thing - absolutely nothing. It also increases visual clutter, as more
-words is more text to read and meaningless words are just noise.
+これが受け入れられないのは、関数に命名することが副作用（`process`が命令を示した動詞です。）
+を示していて、`people`に対して何をするかが表現されていないからです。
+`Items`という接尾語にも意味はありません。なぜなら、`processThingy`、`processRows`、`processStuff`と呼ぶかもしれませんし、それらもまた全く同じことがいえます - 全く意味がありません。
+また、これは見た目にも乱雑さが増し、単語が多くなれば多くなるほど、読まなければならない文字が増え、
+意味のない言葉は単なる雑音でしかありません。
 
-Properly chosen descriptive names - good. Bullshit names - bad.
+適切に選ばれた説明的な名前は - よいです。 最低な名前は - 最悪です。
