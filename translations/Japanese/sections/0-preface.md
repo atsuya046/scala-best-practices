@@ -1,25 +1,20 @@
-## 0. Preface
+## 0. 序文
 
 <img src="https://raw.githubusercontent.com/monifu/scala-best-practices/master/assets/scala-logo-256.png"  align="right" width="128" height="128" />
 
-What follows is a list of best practices I compiled for my colleagues,
-advice sprung from the painful experience coming naturally from
-dealing with other people's code :-)
+以下は、私の同僚のために集めたベストプラクティスのリストと、他人のコードに取り組んでいるときに
+得た辛苦体験から生まれたアドバイスによるものです。
 
-Defining a list of best practices is always hard. I like to think that
-we are defining a protocol of communication, because we are. Therefore
-this document uses keywords defined in
-[RFC 2119](https://www.ietf.org/rfc/rfc2119.txt), to differentiate
-between rules that should never be broken and those that can be broken
-if you know what you're doing.
+ベストプラクティスのリストを明確にするのは常に困難です。実際にそうであるため、私たちは通信プロトコルを定義するように定義します。従って、このドキュメントでは [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt) に定義されたキーワードを使用するルールとしています。
 
-This list is also far from complete.
+【訳注】この和訳の方でも、[RFC2119の和訳](https://www.ipa.go.jp/security/rfc/RFC2119JA.html)に従うようにしています。
 
-### 0.1. MUST NOT follow advice blindly
+このリストは、完成からはほど遠くあります。
 
-This should be the first rule of any document that describes best
-practices.
+### 0.1. やみくもにアドバイスを信じないでください
 
-Always try to understand the reasons behind a rule, don't
-cargo-cult. Following advice blindly leads to the worst hairballs
-imaginable.
+これは、どんなベストプラクティスのドキュメントでも最初に定義されるべきルールです。
+
+常にルールの背後にある理由を理解するようにしてください。カーゴ・カルトにならないようにしてください。
+
+【訳注】[カーゴ・カルト・プログラミング](https://ja.wikipedia.org/wiki/%E3%82%AB%E3%83%BC%E3%82%B4%E3%83%BB%E3%82%AB%E3%83%AB%E3%83%88%E3%83%BB%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0)というものが存在します。 

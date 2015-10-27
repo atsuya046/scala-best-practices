@@ -1,14 +1,19 @@
-# Scala Best Practices
+# Scala ベストプラクティス
 
 <img src="https://raw.githubusercontent.com/monifu/scala-best-practices/master/assets/scala-logo-256.png"  align="right" width="100" height="100" />
 
-A collection of best practices, friendly to people that want to
-contribute.
+※こちらはscala-best-practicesを和訳したものです。原文はこちらとなります。
 
-- Version: `0.4`
-- Updated at: `2014-10-24`
+ [https://github.com/alexandru/scala-best-practices]()
 
-## Table of Contents
+これはScalaのベストプラクティスを集めたものです。是非コントリビュートをお願いします。
+
+- バージョン: `0.4`
+- 更新日: `2014-10-24`
+
+## 目次
+
+TODO: 各セクションが訳されたら更新する
 
 - [0. Preface](sections/0-preface.md)
   - [0.1 MUST NOT follow advice blindly](sections/0-preface.md#01-must-not-follow-advice-blindly)
