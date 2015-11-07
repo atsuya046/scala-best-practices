@@ -41,7 +41,7 @@ class MyActor extends Actor {
   def receive = {
     case Add(key) =>
       isInSet += key
-      
+
     case Contains(key) =>
       sender() ! isInSet(key)
   }
@@ -70,7 +70,7 @@ class MyActor extends Actor {
   def active(isInSet: Set[String]): Receive = {
     case Add(key) =>
       context become active(isInSet + key)
-      
+
     case Contains(key) =>
       sender() ! isInSet(key)
   }
@@ -94,10 +94,10 @@ class MyActor extends Actor {
       for (shouldAdd <- validate(key)) {
         if (shouldAdd) isInSet += key
       }
-        
+
     // ...
   }
-  
+
   def validate(key: String): Future[Boolean] = ???
 }
 ```
@@ -125,16 +125,16 @@ class MyActor extends Actor {
     case Add(key) =>
       val f = for (isValid <- validate(key))
         yield Validated(key, isValid)
-        
+
       // sending the result as a message back to our actor
       f pipeTo self
 
     case Validated(key, isValid) =>
       if (isValid) isInSet += key
-              
+
     // ...
   }
-  
+
   def validate(key: String): Future[Boolean] = ???
 }
 
@@ -158,7 +158,7 @@ class MyActor extends Actor {
     case Add(key) =>
       // sending the result as a message back to our actor
       validate(key).map(Validated(key, _)).pipeTo(self)
-      
+
       // waiting for validation
       context.become(waitForValidation(isInSet, sender()))
   }
@@ -229,7 +229,7 @@ case object PollTick
  *
  *  - Standby, which means there probably is a pending queue of items waiting to
  *    be sent downstream, but the actor is waiting for demand to be signaled
- * 
+ *
  *  - Polling, which means that there is demand from downstream, but the
  *    actor is waiting for items to happen
  *
@@ -262,7 +262,7 @@ class Producer(source: DataSource, router: ActorRef) extends Actor {
         case None =>
           // no items available, go in polling mode
           context.become(polling)
-          
+
         case Some(item) =>
           // item available, send it downstream,
           // and stay in standby state
@@ -291,7 +291,7 @@ class Producer(source: DataSource, router: ActorRef) extends Actor {
  * NOTE: the protocol of Producer needs to be respected - so
  *       we are signaling a Continue to the upstream Producer
  *       after and only after a item has been sent downstream
- *       for processing to a worker. 
+ *       for processing to a worker.
  */
 class Router(producer: ActorRef) extends Actor {
   var upstreamQueue = Queue.empty[Item]
@@ -344,7 +344,7 @@ class Worker(router: ActorRef) extends Actor {
     // signals initial demand to upstream
     router ! Continue
   }
-  
+
   def receive = {
     case item: Item =>
       process(item)
