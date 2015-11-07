@@ -229,7 +229,7 @@ case class Validated(key: String, isValid: Boolean)
 
 そしてもちろん、最後の一つが完了するまで、それ以上のリクエストを受け入れない状態マシンをモデル化することができます。
 私たちは、可変コレクションを取り除き、またバックプレッシャを取り入れることができます。
-（つまり、次のアイテムを送信することができたとき、送信者に伝える必要があります。）:
+（つまり、次のアイテムを送信することができたとき、それを送信者に伝える必要があります。）:
 <!--
 And of course, we could be modeling a state-machine that doesn't
 accept any more requests until the last one is done. Let us also get
@@ -344,6 +344,7 @@ Problems:
 
 1. もし、メッセージキューに際限がなければ、低速なコンシューマがキューを溢れさせてしまう
 2. 配分が非効率だと、あるワーカーが多数のアイテムを処理しているのに、あるワーカーは静止していることになりえる
+
 <!--
 1. if the queue of messages is unbounded, with slow consumers that
    queue can blow up
@@ -359,6 +360,7 @@ A correct, worry-free design does this:
 
 - ワーカーは要求を通知しなければいけません（つまり、アイテムを処理できるようになったときに要求を通知）
 - プロデューサはワーカーからの要求があったときのみアイテムを産出しなければいけません
+
 <!--
 - workers must signal demand (i.e. when they are ready for processing more items)
 - the producer must produce items only when there is demand from workers
