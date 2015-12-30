@@ -1,35 +1,26 @@
-## 3. Application Architecture
+## 3. アプリケーション・アーキテクチャ
 
 <img src="https://raw.githubusercontent.com/monifu/scala-best-practices/master/assets/scala-logo-256.png"  align="right" width="128" height="128" />
 
-### 3.1. SHOULD NOT use the Cake Pattern
+### 3.1. Cakeパターンを使うべきではない
 
-The Cake Pattern is a very
-[good idea in theory](https://www.youtube.com/watch?v=yLbdw06tKPQ) -
-using traits as modules that can be composed, giving you the ability
-to override `import`, with compile-time dependency injection as a
-side-effect.
+Cakeパターンは
+[理論的にとても良いアイデアだ](https://www.youtube.com/watch?v=yLbdw06tKPQ) -委譲可能なmoduleとしてのtraitを使うことにより、コンパイル時の依存性注入の副作用とともに`import`を上書きする力が得られる。
 
-In practice all the Cake implementations I've seen have been awful,
-new projects should steer away and existing projects should be
-migrated off Cake.
 
-People are not implementing Cake correctly, being a poorly understood
-design pattern. I haven't seen Cake implementations in which the
-traits are designed to be abstract modules, or that pay proper
-attention to life-cycle issues. What happens in practice is sloppiness,
-with the result being a big hairball. It's awesome that Scala allows
-you to do things like the Cake pattern, highlighting the real power of
-OOP, but just because you can doesn't mean you should, because if the
-purpose is doing dependency injection and decoupling between various
-components, you'll fail hard and impose that maintenance burden on
-your colleagues.
+実際に私が見たすべてのCakeパターンの実装はひどかった、新しいプロジェクトではなるべくCakeパターンを避け、すでにあるプロジェクトではCakeパターンのない状態に移行するべきである。
+
+
+みんなデザインパターンへの理解が不十分なため、Cakeパターンを正しく実装していない。私は抽象的なmoduleとしてデザインされたtraitを使ったもしくはライフサイクルの問題に適切に注意を払ったCakeパターン実装を見たことがない。このずさんさは結果として大きな毛玉を引き起こす。ScalaがCakeパターンのようなものを許していることは、OOPの真の力を引き立てていて素晴らしい。しかしそれはそうすべきであるという理由ではない。もしも様々なコンポーネントでの依存性注入やデカップリングを行うことが目的である場合は、おそらくひどく失敗し同僚にメンテナンス業務の負担を与えてしまっているだろう。
+
 
 In fact, one should strive to not do dependency injection at all, or
 to do it only at the edges (like Play's controllers). Because if a
 component depends on too many things, that's *code smell*. If a
 component depends on hard to initialize arguments, that's also *code
 smell*. Don't hide painful things under the rug, fix it instead.
+
+実際にはすべての依存性注入を行わないもしくは（Playのcontrollersのように）端の部分だけにとどめるよう努めるべきである。
 
 ### 3.2. MUST NOT put things in Play's Global
 
