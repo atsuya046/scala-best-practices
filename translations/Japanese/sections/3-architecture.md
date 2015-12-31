@@ -24,38 +24,24 @@ Cakeパターンは[理論的にとても良いアイデアだ](https://www.yout
 
 あなた独自のユーティリティのためのnamespaceを考えてください。
 
-### 3.3. SHOULD NOT apply optimizations without profiling
 
-Profiling is a prerequisite for doing optimizations. Never work on
-optimizations, unless through profiling you discover the actual
-bottlenecks.
+### 3.3. プロファイリングせず最適化をすべきではない
 
-This is because our intuition about how the system behaves often fails
-us and multiple effects could happen by applying optimizations without
-having hard numbers:
+プロファイリングは最適化をするにあたって必要になるものである。決してプロファイリングを通して実際のボトルネックを見つけることなしに最適化にとりかかってはいけない。
 
-- you could complicate the code or the architecture, thus making it
-  harder to apply later optimizations globally
-- your work could be in vain or it could actually lead to more
-  performance degradation
 
-Multiple strategies available and you should preferably do all of
-them:
+これは、しばしば私たちが失敗してしまいシステムがどのように振る舞うかについての洞察と、確かな数値なしに最適化することにより複数の影響が起こるかもしれないことが理由である:
 
-- a good profiler can tell you about bottlenecks that aren't obvious,
-  my favorite being YourKit Profiler, but Oracle's VisualVM is free
-  and often good enough
-- collect metrics from the running production systems, by means of a
-  library such as
-  [Dropwizard Metrics](https://dropwizard.github.io/metrics/3.1.0/)
-  and push them in something like
-  [Graphite](http://graphite.wikidot.com/), a strategy that can lead
-  you in the right direction
-- compare solutions by writing benchmarking code, but note that
-  benchmarking is not easy and you should at least use a library like
-  [Google Caliper](https://code.google.com/p/caliper/)
+- コードもしくはアーキテクチャを複雑にしてしまうかもしれない、そのため後で全体的に最適化することを困難なものにしてしまう
+- あなたの仕事はムダになるかもしれない、もしくは実際にはパフォーマンスの低下を引き起こすかもしれない
 
-Overall - measure, don't guess.
+複数の取りうる戦略と積極的に実行すべきこととして、
+
+- 良いプロファイラは見つけにくいボトルネックを教えてくれる。私のお気に入りはYourKit Profilerであるが、OracleのVisualVMは無料で十分に良いものである。
+- [Dropwizard Metrics](https://dropwizard.github.io/metrics/3.1.0/)のようなライブラリをつかって稼働中のproductionシステムから測定基準を集め、[Graphite](http://graphite.wikidot.com/)などにそれらを追加していくことで、戦略は正しい方向に導かれていく。
+- ベンチマークのコードを書いてソリューションを比較したが、ベンチマークは簡単ではないことと少なくとも[Google Caliper](https://code.google.com/p/caliper/)のようなライブラリを利用する必要があることに注意しなければならない。
+
+全体として、測量は推測されない。
 
 ### 3.4. SHOULD be mindful of the garbage collector
 
