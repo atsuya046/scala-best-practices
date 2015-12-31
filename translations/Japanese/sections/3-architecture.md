@@ -43,32 +43,21 @@ Cakeパターンは[理論的にとても良いアイデアだ](https://www.yout
 
 全体として、測量は推測されない。
 
-### 3.4. SHOULD be mindful of the garbage collector
+### 3.4. ガーベジコレクタには注意すべき
 
-Don't over allocate resources, unless you need to. We want to avoid
-micro optimizations, but always be mindful about the effects
-allocations can have on your system.
+必要以上にリソースを割り当てすぎてはいけない。我々は小さな最適化を避けたいが、いつもあなたのシステムが所有できるに割り当ての効果について留意しなければならない。
 
-In the
-[words of Martin Thomson](http://www.infoq.com/presentations/top-10-performance-myths),
-if you stress the garbage collector, you'll increase the latency on
-stop-the-world freezes and the number of such occurrences, with the
-garbage collector acting like a GIL and thus limiting performance and
-vertical scalability.
+[words of Martin Thomson](http://www.infoq.com/presentations/top-10-performance-myths)の中で,もしガーベジコレクタに頼りきっているならば、stop the worldのフリーズにともなうレイテンシが増加し、それらの発生数を増やし、ガーベジコレクタがGILのように振る舞い、そのためパフォーマンスと垂直のスケーラビリティを制限してしまう。
 
-Example:
+例えば:
 
 ```scala
 query.filter(_.someField.inSet(Set(name)))
 ```
 
-This is a sample that occurred in our project due to a problem with
-Slick's API. So instead of a `===` test, the developer chose to do an
-`inSet` operation with a sequence of 1 element. This allocation of a
-collection of 1 element happens on every method call. Now that's not
-good, what can be avoided should be avoided.
+これは我々のプロジェクトがSlickのAPIの問題に起因して発生したサンプルである。sequenceの1要素を`===`でテストする変わりに開発者が`inSet`による操作を選んでしまった。この1要素コレクションの割り当てはすべてのメソッド呼び出しで発生する。これはよろしくない、避けるべきである。
 
-Another example:
+他の例:
 
 ```scala
 someCollection
@@ -76,10 +65,8 @@ someCollection
  .map(_.name)
 ```
 
-First of all, this creates a Set every single time, on each element of
-our collection. Second of all, filter and map can be compressed in one
-operation, otherwise we end up with more garbage and more time spent
-building the final collection:
+まずはじめに、これはコレクション中のそれぞれの要素で毎回Setを作成する。次にfilterとmapは一つの操作にまとめることができる。そうでなければ最終的なコレクションを構築するまでに多くのゴミを生成し多くの時間を費やしてしまう。
+
 
 ```scala
 val isIDValid = Set(a,b,c)
@@ -89,8 +76,7 @@ someCollection.collect {
 }
 ```
 
-A generic example that often pops up, exemplifying useless traversals
-and operators that could be compressed:
+横断せずに圧縮して操作できる例として、ポップアップをする一般的な例:
 
 ```scala
 collection
@@ -100,27 +86,10 @@ collection
   .headOption
 ```
 
-Also, take notice of your requirements and use the data-structure
-suitable for your use-case. You want to build a stack? That's a
-`List`. You want to index a list? That's a `Vector`. You want to
-append to the end of a list? That's again a `Vector`. You want to push
-to the front and pull from the back? That's a `Queue`. You have a set
-of things and want to check for membership? That's a `Set`. You have a
-list of things that you want to keep ordered? That's a
-`SortedSet`. This isn't rocket science, just computer science 101.
+また、ユースケースに適したデータ構造を使うことに気をつけなければならない。スタックを作りたい？それなら`List`。listにindexを付けたい？それなら`Vector`。listの末尾に追加したい？それならまたも`Vector`。前に入れて後ろから出したい？それなら`Queue`。集合に対して構成員を確認したい？それなら`Set`。listに順序を持たせたい？それなら`SortedSet`。これはロケット科学ではない、コンピュータ科学101だ。
 
-We are not talking about extreme micro optimizations here, we aren't
-even talking about something that's Scala, or FP, or JVM specific
-here, but be mindful of what you're doing and try to not do
-unnecessary allocations, as it's much harder fixing it later.
+私たちはここでは極端に小さな最適化について話してはいない、ScalaやFPやJVMの仕様についても話していない、しかしあなたのやっていることに留意しなければならない、そして後になって修正が難しくなってしまうような不必要な割り当てをしないようにしなければならない。
 
-BTW, there is an obvious solution for keeping expressiveness while
-doing filtering and mapping - lazy collections, which in Scala means
-[Stream](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Stream)
-if you need memoization or
-[Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html)
-if you don't need memoization.
+ところで、表現力を維持しながらfilteringやmappingをするためのわかりやすいソリューションがある。Scalaで言うところの遅延Collectionだ。もしメモ化する必要があるならば[Stream](http://www.scala-lang.org/api/current/index.html#scala.collection.immutable.Stream)、メモ化する必要がないならば[Iterable](http://docs.oracle.com/javase/7/docs/api/java/lang/Iterable.html)。
 
-Also, make sure to read the
-[Rule 3.3](#33-should-not-apply-optimizations-without-profiling) on
-profiling.
+また、プロファイリングするにあたって[Rule 3.3](#33-should-not-apply-optimizations-without-profiling)も読んでおいてください。
