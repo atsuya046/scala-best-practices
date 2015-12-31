@@ -14,13 +14,8 @@ Cakeパターンは
 みんなデザインパターンへの理解が不十分なため、Cakeパターンを正しく実装していない。私は抽象的なmoduleとしてデザインされたtraitを使ったもしくはライフサイクルの問題に適切に注意を払ったCakeパターン実装を見たことがない。このずさんさは結果として大きな毛玉を引き起こす。ScalaがCakeパターンのようなものを許していることは、OOPの真の力を引き立てていて素晴らしい。しかしそれはそうすべきであるという理由ではない。もしも様々なコンポーネントでの依存性注入やデカップリングを行うことが目的である場合は、おそらくひどく失敗し同僚にメンテナンス業務の負担を与えてしまっているだろう。
 
 
-In fact, one should strive to not do dependency injection at all, or
-to do it only at the edges (like Play's controllers). Because if a
-component depends on too many things, that's *code smell*. If a
-component depends on hard to initialize arguments, that's also *code
-smell*. Don't hide painful things under the rug, fix it instead.
+実際にはすべての依存性注入を行わないもしくは（Playのcontrollersのように）端の部分だけにとどめるよう努めるべきである。コンポーネントは多くのものに依存している（*code smell*として）ので。もしコンポーネントが引数の初期化に強く依存しているならば、それもまた*code smell*である。痛みをラグの下に隠さず、かわりにそれを修正しよう。
 
-実際にはすべての依存性注入を行わないもしくは（Playのcontrollersのように）端の部分だけにとどめるよう努めるべきである。
 
 ### 3.2. MUST NOT put things in Play's Global
 
