@@ -16,17 +16,13 @@ Cakeパターンは[理論的にとても良いアイデアだ](https://www.yout
 実際にはすべての依存性注入を行わないもしくは（Playのcontrollersのように）端の部分だけにとどめるよう努めるべきである。コンポーネントは多くのものに依存している（*code smell*として）ので。もしコンポーネントが引数の初期化に強く依存しているならば、それもまた*code smell*である。痛みをラグの下に隠さず、かわりにそれを修正しよう。
 
 
-### 3.2. MUST NOT put things in Play's Global
+### 3.2. PlayのGlobalオブジェクトに押し込んではいけない
 
-I'm seeing this over and over again.
+私はこれを何度も何度も見てきました。
 
-Folks,
-[Play's Global](https://www.playframework.com/documentation/2.3.x/ScalaGlobal)
-object is not a bucket in which you can shove your orphaned pieces of
-code. Its purpose is to hook into Play's configuration and life-cycle,
-nothing more.
+[PlayのGlobal](https://www.playframework.com/documentation/2.3.x/ScalaGlobal)オブジェクトはよりどころのないコードを押し込んでおくことのできるバケツではない。それはPlayの設定やライフサイクルに接続する以上の何ものでもない。
 
-Come up with your own freaking namespace for your utilities.
+あなた独自のユーティリティのためのnamespaceを考えてください。
 
 ### 3.3. SHOULD NOT apply optimizations without profiling
 
